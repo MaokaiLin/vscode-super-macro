@@ -2,7 +2,7 @@
 	"name": "super-macro",
 	"displayName": "Super Macro",
 	"description": "Define vscode command combos with repeats and delays.",
-	"version": "0.0.1",
+	"version": "0.1.0",
 	"engines": {
 		"vscode": "^1.31.0"
 	},
@@ -10,21 +10,33 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:extension.macro"
+		"*"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"configuration": {
+            "title": "Super Macros Configuration",
             "type": "object",
-            "title": "Super macros",
-            "properties":{
-                "macro":{
-					"demo": [
-						"cursorEnd",
-						{"command": "type", "args": {"text": "\n"}, "repeat": 3, "intervalAfter": 100},
-						{"command": "cursorUp", "repeat": 3},
-						{"command": "cursorHome", "intervalBefore": 100}
-					]
+            "properties": {
+                "macro.definitions": {
+					"type": "object",
+					"default": {
+						"single": {
+							"command": "type",
+							"args": {"text": "super macro extension says hi!\n"},
+							"repeat": 3,
+							"delayBefore": 100,
+							"delayBetween": 200,
+							"delayAfter": 50
+						},
+						"sequence": [
+							"cursorEnd",
+							{"command": "type", "args": {"text": "\n"}, "repeat": 3, "delayBefore": 100},
+							{"command": "cursorDown", "repeat": 2, "delayBetween": 50},
+							{"command": "cursorRight", "delayAfter": 200},
+							{"command": "type", "args": {"text": "Done!"}, "repeat": 2}
+						]
+					}
                 }
             }
         }
