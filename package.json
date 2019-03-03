@@ -2,7 +2,7 @@
 	"name": "super-macro",
 	"displayName": "Super Macro",
 	"description": "Define vscode command combos with repeats and delays.",
-	"version": "0.1.0",
+	"version": "1.0.0",
 	"engines": {
 		"vscode": "^1.31.0"
 	},

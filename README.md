@@ -1,35 +1,85 @@
-# super-macro README
+# super-macro extension for VS Code
 
-This is the README for your extension "super-macro". After writing up a brief description, we recommend including the following sections.
+This extension provides ways to run multiple commands repeatedly with intervals.
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+The extension provides two ways to run combination of commands:
 
-For example if there is an image subfolder under your extension project workspace:
+- A command `extension.macro` to invoke directly.
 
-\!\[feature X\]\(images/feature-x.png\)
+    For example, one can define the following key combo to insert 3 new lines below and move cursor back to the second line:
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+    ```json
+    {
+        "key": "cmd+ctrl+l 3",
+        "command": "extension.macro",
+        "args": [
+            "cursorEnd",
+            {"command": "type", "args": {"text": "\n"}, "repeat": 3},
+            "cursorUp"
+        ]
+    }
+    ```
 
-## Requirements
+- Define the `macro.definitions` configuration to introduce new commands.
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+    For example, one can define the following macros in settings (in `settings.json` file):
 
-## Extension Settings
+    ```json
+    "macro.definitions": {
+        "cursorDown5Lines": {
+            "command": "cursorDown",
+            "repeat": 5
+        },
+        "scrollDownAndBack": [
+            {"command": "scrollPageDown", "repeat": 3, "delayBetween": 5000, "delayAfter": 10000}},
+            {"command": "scrollPageUp", "repeat": 3},
+        ]
+    }
+    ```
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+    After reloading a window, one can invoke commands `extension.macro.cursorDown5Lines` and `extension.macro.scrollDownAndBack`:
+    - The first command will move the cursor down 5 lines.
+    - The second command will scroll 3 pages down while waiting for 5 seconds in between, then stop there for 10 seconds, and finally scroll 3 pages back up.
 
-For example:
+    The commands can be binded to specific keys:
 
-This extension contributes the following settings:
+    ```json
+    {"key": "ctrl+j", "command": "extension.macro.cursorDown5Lines"}
+    ```
 
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
+Note in the examples above, a macro can be either a single macro object, such as
 
-## Known Issues
+```json
+{"command": "cursorDown", "repeat": 5}
+```
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+or an array of strings and/or macro objects such as
+
+```json
+[
+    "cursorHome",
+    {"command": "scrollPageDown", "repeat": 3, "delayBetween": 5000, "delayAfter": 10000}},
+    {"command": "scrollPageUp", "repeat": 3},
+    "cursorEnd"
+]
+```
+
+If defined as an array, the commands in the array will be run sequentially.
+
+A macro object should be defined in the following format:
+
+```json
+{
+    "command": "string",       // required, vscode command to run
+    "args": {"key": "value"},  // optional, arguments to pass to the command
+    "repeat": 5,               // optional, number of times to run, default to once if not provided
+    "delayBefore": 100,        // optional, milliseconds to wait before running the command, default not to wait
+    "delayBetween": 50,        // optional, milliseconds to wait between repeated command runs, default not to wait
+    "delayAfter": 150,         // optional, milliseconds to wait after running the command, default not to wait
+}
+```
 
 ## Release Notes
 
@@ -37,29 +87,4 @@ Users appreciate release notes as you update your extension.
 
 ### 1.0.0
 
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
------------------------------------------------------------------------------------------------------------
-
-## Working with Markdown
-
-**Note:** You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+CMD+V` on macOS or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (macOS) to see a list of Markdown snippets
-
-### For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+Initial release of Super Macro
