@@ -33,7 +33,7 @@ The extension provides two ways to run combination of commands:
             "repeat": 5
         },
         "scrollDownAndBack": [
-            {"command": "scrollPageDown", "repeat": 3, "delayBetween": 5000, "delayAfter": 10000}},
+            {"command": "scrollPageDown", "repeat": 3, "delayBetween": 5000, "delayAfter": 10000},
             {"command": "scrollPageUp", "repeat": 3},
         ]
     }
@@ -60,7 +60,7 @@ or an array of strings and/or macro objects such as
 ```json
 [
     "cursorHome",
-    {"command": "scrollPageDown", "repeat": 3, "delayBetween": 5000, "delayAfter": 10000}},
+    {"command": "scrollPageDown", "repeat": 3, "delayBetween": 5000, "delayAfter": 10000},
     {"command": "scrollPageUp", "repeat": 3},
     "cursorEnd"
 ]
@@ -70,14 +70,14 @@ If defined as an array, the commands in the array will be run sequentially.
 
 A macro object should be defined in the following format:
 
-```json
+```
 {
-    "command": "string",       // required, vscode command to run
-    "args": {"key": "value"},  // optional, arguments to pass to the command
-    "repeat": 5,               // optional, number of times to run, default to once if not provided
-    "delayBefore": 100,        // optional, milliseconds to wait before running the command, default not to wait
-    "delayBetween": 50,        // optional, milliseconds to wait between repeated command runs, default not to wait
-    "delayAfter": 150,         // optional, milliseconds to wait after running the command, default not to wait
+    "command": string,       // required, vscode command to run
+    "args": object,          // optional, arguments to pass to the command
+    "repeat": number,        // optional, number of times to run, default to once if not provided
+    "delayBefore": number,   // optional, milliseconds to wait before running the command, default not to wait
+    "delayBetween": number,  // optional, milliseconds to wait between repeated command runs, default not to wait
+    "delayAfter": number     // optional, milliseconds to wait after running the command, default not to wait
 }
 ```
 
