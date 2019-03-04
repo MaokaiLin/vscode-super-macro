@@ -18,7 +18,8 @@ export function activate(context: vscode.ExtensionContext) {
 	//   {"key": "cmd+n", "command": "extension.macro", "args": {"command": "cursorDown", "repeat": 5}}
 	// or
 	//   {"key": "cmd+p", "command": "extension.macro", "args": ["cursorDown", {"command": "cursorRight", "repeat": 2, "delayBetween": 200}]}
-	context.subscriptions.push(vscode.commands.registerCommand(MACRO_COMMAND_NAME, runMacro));
+	const macroCommand = vscode.commands.registerCommand(MACRO_COMMAND_NAME, runMacro);
+	context.subscriptions.push(macroCommand);
 
 	// Register a command for each user defined macro with command name "extension.macro.{user_defined_macro_name}"
 	const macroDefinitions: MacroDefinitions = vscode.workspace.getConfiguration("macro.definitions");
@@ -26,14 +27,15 @@ export function activate(context: vscode.ExtensionContext) {
 		// Filter out the additional properties added by vscode such as get, inspect, etc.
 		.filter(macroName => typeof macroDefinitions[macroName] === 'object')
 		.forEach(macroName => {
-			context.subscriptions.push(
-				vscode.commands.registerCommand(
-					`${MACRO_COMMAND_NAME}.${macroName}`,
-					async () => {
-						await runMacro(macroDefinitions[macroName]);
-					}
-				)
-			);
+			const commandName = `${MACRO_COMMAND_NAME}.${macroName}`;
+			const commandFunction = async () => {
+				await vscode.commands.executeCommand(
+					MACRO_COMMAND_NAME,
+					macroDefinitions[macroName]
+				);
+			};
+			const userDefinedMacroCommand = vscode.commands.registerCommand(commandName, commandFunction);
+			context.subscriptions.push(userDefinedMacroCommand);
 		});
 }
 
